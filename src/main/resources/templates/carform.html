@@ -8,12 +8,13 @@
 
 </head>
 <body>
-
-<form method="post" th:action="@{/add}" th:object="${actor}" enctype="multipart/form-data">
-    Name: <input type="text" th:field="*{name}"><br>
-    Real name: <input type="text" th:field="*{realName}"><br>
-    Photo: <input type="file" name="file"> <!-- //important to match name with request param-->
-    <input type="submit" value="Enter Actor">
+<div th:replace="fragments :: navbar"></div>
+<form method="post" th:action="@{/add}" th:object="${car}" enctype="multipart/form-data">
+    Model: <input type="text" th:field="*{model}"><br>
+    Maker: <input type="text" th:field="*{maker}"><br>
+    Description: <input type="text" th:field="*{description}"><br>
+    Photo: <input type="file" name="file"><br> <!-- //important to match name with request param-->
+    <input type="submit" value="Submit Car">
 </form>
 
 

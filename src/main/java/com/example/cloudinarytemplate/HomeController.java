@@ -20,33 +20,38 @@ public class HomeController {
     RoleRepository roleRepository;
 
     @Autowired
-    ActorRepository actorRepository;
+    CarRepository carRepository;
 
     @Autowired
     CloudinaryConfig cloudc;
 
 
     @RequestMapping("/")
-    public String listActors(Model model){
-        model.addAttribute("actors", actorRepository.findAll());   //findall returns a collection, can be converted to arraylist
+    public String listCars(Model model){
+        model.addAttribute("cars", carRepository.findAll());   //findall returns a collection, can be converted to arraylist
         return "list";
     }
 
     @GetMapping("/add")
-    public String newActor(Model model){
-        model.addAttribute("actor", new Actor());
-        return "actorform";
+    public String newCar(Model model){
+        model.addAttribute("car", new Car());
+        return "carform";
     }
 
     @PostMapping("/add")
-    public String processActor(@ModelAttribute Actor actor, @RequestParam("file") MultipartFile file){
+    public String processActor(@ModelAttribute Car car, @RequestParam("file") MultipartFile file){
         if (file.isEmpty()){
-            return "redirect:/add";
+            car.setImage("https://res.cloudinary.com/nk4363/image/upload/v1628530719/car-outline-icon-vector_acdxwf.webp");
+            carRepository.save(car);
+            return "redirect:/";
         }
         try {
             Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
-            actor.setHeadshot(uploadResult.get("url").toString());
-            actorRepository.save(actor);
+            String tempurl = uploadResult.get("url").toString();
+//            tempurl.indexOf("upload/");
+//                    "/w_1000,ar_1:1,c_fill,g_auto/"
+            car.setImage(uploadResult.get("url").toString());
+            carRepository.save(car);
         } catch (IOException e){
             e.printStackTrace();
             return "redirect:/add";
